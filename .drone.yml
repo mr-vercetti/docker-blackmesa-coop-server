@@ -1,0 +1,27 @@
+kind: pipeline
+type: docker
+name: default
+
+clone:
+  disable: true
+
+steps:
+- name: clone
+  image: plugins/git
+  settings:
+    recursive: true
+- name: lint
+  image: hadolint/hadolint:latest-debian
+  commands:
+    - hadolint Dockerfile --no-fail
+- name: build and publish
+  image: plugins/docker
+  environment:
+    DOCKER_BUILDKIT: 1
+  settings:
+    username:
+       from_secret: DOCKER_USERNAME
+    password:
+       from_secret: DOCKER_PASSWORD
+    repo: mrvercetti/blackmesa-coop-server
+    tags: ${DRONE_COMMIT_SHA:0:8}, latest
