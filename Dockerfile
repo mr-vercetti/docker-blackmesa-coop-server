@@ -19,7 +19,9 @@ ENV LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=en_US.UTF-8
 ENV SERVER_DIR="/blackmesa-server"
 ENV OUTPUT_DIR="/output"
 # Startup variables
-ENV GAME_PARAMS="+map bm_c0a0a +mp_teamplay 1 +maxplayers 2 -port 27015 -console -debug;"
+ENV GAME_PARAMS="+map bm_c0a0a +maxplayers 10 -port 27015 -console -debug"
+ENV GAME_NAME="Black Mesa Co-Op Server"
+ENV GAME_PASSWORD=""
 
 # Set up Enviornment
 RUN useradd --home ${SERVER_DIR} --gid root --system abc && \
@@ -35,6 +37,7 @@ RUN mkdir -p ${SERVER_DIR}/.steam/sdk32 && \
 # Copy files
 COPY --chown=abc:root --from=builder ${OUTPUT_DIR} ${SERVER_DIR}
 COPY --chown=abc:root --chmod=755 /scripts/start.sh /
+COPY --chown=abc:root /config/server.cfg ${SERVER_DIR}/bms/cfg
 
 # Download and extract mods
 WORKDIR ${SERVER_DIR}/bms
